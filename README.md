@@ -128,15 +128,15 @@ O site ficará disponível em: http://localhost:5173
 
 ### Utilizador Administrador
 
-    O script de importação cria automaticamente um superutilizador para gestão.
+- O script de importação cria automaticamente um superutilizador para gestão.
 
-    Utilizador: admin
+  Utilizador: admin
 
-    Palavra-passe: admin
+  Palavra-passe: admin
 
 ### Utilizador Cliente
 
-    Novos clientes podem criar uma conta clicando em "Cadastrar" na interface de login. Utilizadores criados através do site têm perfil de cliente (apenas visualização e aprovação).
+- Novos clientes podem criar uma conta clicando em "Cadastrar" na interface de login. Utilizadores criados através do site têm perfil de cliente (apenas visualização e aprovação).
 
 ---
 
