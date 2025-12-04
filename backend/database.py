@@ -1,7 +1,6 @@
 import os
 from sqlmodel import SQLModel, create_engine, Session
 
-# --- CORREÇÃO DEFINITIVA DE CAMINHO ---
 # Pega o caminho exato da pasta onde este arquivo (database.py) está
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 

@@ -109,9 +109,6 @@ def create_vehicle(vehicle: Vehicle, current_user: str = Depends(get_current_use
     if not user.is_superuser:
         raise HTTPException(status_code=403, detail="Apenas administradores podem cadastrar veículos.")
 
-    # Se for admin, precisamos saber de QUEM é o carro. 
-    # Como seu form frontend atual manda o vehicle.owner_id vazio ou fixo, vamos ajustar:
-    # Se o admin mandou um owner_id no JSON, usa ele. Se não, associa ao admin (ou erro).
     if not vehicle.owner_id:
          vehicle.owner_id = user.id # Fallback
          
@@ -123,6 +120,7 @@ def create_vehicle(vehicle: Vehicle, current_user: str = Depends(get_current_use
 @app.get("/orders")
 def list_orders(current_user: str = Depends(get_current_user), session: Session = Depends(get_session)):
     user = session.exec(select(User).where(User.username == current_user)).first()
+    
     if user.is_superuser:
         statement = select(WorkOrder).join(Vehicle)
     else:
@@ -133,9 +131,18 @@ def list_orders(current_user: str = Depends(get_current_user), session: Session 
     for o in orders:
         total = sum(i.quantity * i.unit_price for i in o.items)
         title = " | ".join([i.service.name for i in o.items[:2]])
+        
+        current_status = o.status
+        if not o.customer_confirmed:
+            current_status = "waiting_approval"
+
         result.append({
-            "id": o.id, "title": title, "vehicle_plate": o.vehicle.plate,
-            "total": total, "customer_confirmed": o.customer_confirmed,
+            "id": o.id, 
+            "title": title, 
+            "vehicle_plate": o.vehicle.plate,
+            "total": total, 
+            "customer_confirmed": o.customer_confirmed,
+            "status": current_status, # <--- Enviando o status atualizado
             "owner_name": o.vehicle.owner.username
         })
     return result
@@ -162,6 +169,7 @@ def confirm_order(oid: int, session: Session = Depends(get_session)):
     order = session.get(WorkOrder, oid)
     if order:
         order.customer_confirmed = True
+        order.status = "in_progress" # <--- MUDA O STATUS PARA EM ANDAMENTO
         session.add(order)
         session.commit()
     return {"status": "ok"}
@@ -179,3 +187,54 @@ def list_users(current_user: str = Depends(get_current_user), session: Session =
     if not user.is_superuser:
         raise HTTPException(status_code=403)
     return session.exec(select(User)).all()
+
+
+@app.get("/orders/{oid}")
+def get_order_details(oid: int, session: Session = Depends(get_session)):
+    order = session.get(WorkOrder, oid)
+    if not order:
+        raise HTTPException(status_code=404, detail="OS não encontrada")
+    
+    # Prepara a lista de itens
+    items_data = []
+    total_os = 0
+    for item in order.items:
+        subtotal = item.quantity * item.unit_price
+        total_os += subtotal
+        items_data.append({
+            "service_name": item.service.name,
+            "quantity": item.quantity,
+            "unit_price": item.unit_price,
+            "subtotal": subtotal
+        })
+
+    return {
+        "id": order.id,
+        "status": order.status,
+        "vehicle": f"{order.vehicle.make} {order.vehicle.model} ({order.vehicle.plate})",
+        "mechanic": order.mechanic.name if order.mechanic else "Não atribuído",
+        "notes": order.notes,
+        "items": items_data,
+        "total": total_os,
+        "created_at": order.created_at,
+        "customer_confirmed": order.customer_confirmed
+    }
+
+@app.post("/orders/{oid}/finish")
+def finish_order(oid: int, current_user: str = Depends(get_current_user), session: Session = Depends(get_session)):
+    # 1. Verifica se quem chamou é Admin
+    user = session.exec(select(User).where(User.username == current_user)).first()
+    if not user or not user.is_superuser:
+        raise HTTPException(status_code=403, detail="Apenas administradores podem finalizar serviços.")
+
+    # 2. Busca a OS
+    order = session.get(WorkOrder, oid)
+    if not order:
+        raise HTTPException(status_code=404, detail="OS não encontrada.")
+
+    # 3. Atualiza status
+    order.status = "completed"
+    session.add(order)
+    session.commit()
+    
+    return {"status": "ok"}

@@ -53,10 +53,10 @@ def import_csv():
                     count += 1
             
             session.commit()
-            print(f"✅ SUCESSO! {count} serviços importados.")
+            print(f" SUCESSO! {count} serviços importados.")
             
         except Exception as e:
-            print(f"❌ Erro: {e}")
+            print(f" Erro: {e}")
 
 if __name__ == "__main__":
     import_csv()
