@@ -2,18 +2,16 @@
 
 :root {
   --primary: #0d6efd;
-  --dark-blue: #004b6b; /* Sua cor personalizada */
+  --dark-blue: #004b6b;
   --avatar-size: 100px;
 }
 
-/* Garante que o gradiente pegue a tela toda e force sobre o branco */
 body {
   background: linear-gradient(135deg, #f8f9fa, #dee2e6) !important;
   background-attachment: fixed;
   min-height: 100vh;
   font-family: 'Inter', sans-serif;
-  margin: 0; 
-  padding: 0;
+  margin: 0; padding: 0;
 }
 
 #root {
@@ -22,15 +20,12 @@ body {
   flex-direction: column;
 }
 
-/* --- Botões Personalizados --- */
-/* O !important aqui garante que o botão fique Azul Escuro */
 .btn-custom {
   background-color: var(--dark-blue) !important;
   border: 1px solid var(--dark-blue) !important;
   color: #fff !important;
   font-weight: 600;
 }
-
 .btn-custom:hover {
   background-color: #fff !important;
   color: var(--dark-blue) !important;
@@ -42,39 +37,30 @@ body {
   color: var(--dark-blue) !important;
   font-weight: 600;
 }
-
 .btn-outline-custom:hover {
   background-color: var(--dark-blue) !important;
   color: #fff !important;
 } 
 
-/* Navbar e Cards */
-.navbar {
-    background-color: white !important;
-    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
-}
+.navbar { background-color: white !important; box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+.card { border: none !important; border-radius: 0.5rem !important; background-color: white !important; }
 
-.card {
-    border: none !important;
-    border-radius: 0.5rem !important;
-    background-color: white !important;
-}
-
-/* --- Perfil --- */
+/* Avatar Stack */
 .avatar-stack { position: relative; width: 120px; height: 120px; margin: 0 auto; }
-
-.profile-avatar {
-  width: 120px; height: 120px; border-radius: 50%;
-  object-fit: cover; border: 4px solid white; background-color: #eee;
-}
-
+.profile-avatar { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid white; background-color: #eee; }
 .profile-edit-btn {
   position: absolute; bottom: 5px; right: 5px; width: 35px; height: 35px;
   border-radius: 50%; background-color: var(--dark-blue); color: white;
   display: flex; align-items: center; justify-content: center;
   border: 2px solid white; cursor: pointer;
 }
+.dropdown-toggle.hide-arrow::after { display: none !important; }
 
-.dropdown-toggle.hide-arrow::after {
-    display: none !important;
+/* --- ESTILO DE IMPRESSÃO --- */
+@media print {
+  .navbar, .btn, .no-print, form, input, .modal-footer, .btn-close, .modal-backdrop { display: none !important; }
+  body, .modal-content, .card { background: white !important; color: black !important; box-shadow: none !important; border: none !important; }
+  .container, .modal-dialog { max-width: 100% !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
+  .modal { position: static !important; background: white !important; }
+  .modal-dialog { transform: none !important; }
 }

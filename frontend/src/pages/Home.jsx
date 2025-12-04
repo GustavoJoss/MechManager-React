@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
-    // Removi 'bg-light' daqui. Agora o fundo é transparente e mostra o gradiente do body
     <div className="d-flex justify-content-center align-items-center" style={{minHeight: '100vh'}}>
       <div className="text-center">
         <h1 className="fw-bold mb-2 display-5 text-dark">MechManager</h1>
