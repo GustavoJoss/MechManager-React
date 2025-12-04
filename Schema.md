@@ -1,4 +1,4 @@
-# 🗂 Diagrama do Banco de Dados — MechManager (Versão FastAPI + React)
+# Diagrama do Banco de Dados — MechManager (Versão FastAPI + React)
 
 O **MechManager** utiliza um modelo relacional robusto, implementado via **SQLModel**, projetado para suportar uma arquitetura de API REST.
 
@@ -6,7 +6,7 @@ O banco de dados (SQLite) foi expandido para suportar funcionalidades modernas c
 
 ---
 
-## 🏛 Estrutura Conceitual
+## Estrutura Conceitual
 
 | Entidade           | Descrição                                                                         |
 | ------------------ | --------------------------------------------------------------------------------- |
@@ -21,7 +21,7 @@ O banco de dados (SQLite) foi expandido para suportar funcionalidades modernas c
 
 ---
 
-## 📐 Diagrama ER (Mermaid)
+## Diagrama ER (Mermaid)
 
 ```mermaid
 erDiagram
